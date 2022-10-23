@@ -3,6 +3,7 @@ package worker
 import (
 	"context"
 	"fmt"
+	"github.com/RichardKnop/machinery/v1"
 	"github.com/RichardKnop/machinery/v1/tasks"
 )
 
@@ -20,11 +21,11 @@ func HelloWorld() error {
 	return nil
 }
 
-func SendHelloWorldTask(ctx context.Context) {
+func SendHelloWorldTask(ctx context.Context, server *machinery.Server) {
 	args := make([]tasks.Arg, 0)
 	task, _ := tasks.NewSignature(HelloWorldTaskName, args)
 	task.RetryCount = 3
-	AsyncTaskCenter.SendTaskWithContext(ctx, task)
+	server.SendTaskWithContext(ctx, task)
 }
 
 func initAsyncTaskMap() {

@@ -7,18 +7,6 @@ import (
 	"github.com/RichardKnop/machinery/v1/tasks"
 )
 
-var (
-	AsyncTaskCenter *machinery.Server
-)
-
-func init() {
-	tc, err := NewTaskCenter()
-	if err != nil {
-		panic(err)
-	}
-	AsyncTaskCenter = tc
-}
-
 func NewTaskCenter() (*machinery.Server, error) {
 	confg := &config.Config{
 		Broker:        "redis://localhost:6379",
@@ -33,7 +21,7 @@ func NewTaskCenter() (*machinery.Server, error) {
 	return server, server.RegisterTasks(asyncTaskMap)
 }
 
-func NewAsyncTaskWorker(concurrency int) *machinery.Worker {
+func NewAsyncTaskWorker(concurrency int, AsyncTaskCenter *machinery.Server) *machinery.Worker {
 	consumerTag := "machinery_worker"
 	// The second argument is a consumer tag
 	// Ideally, each worker should have a unique tag (worker1, worker2 etc)
